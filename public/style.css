@@ -10,23 +10,13 @@ hr {
     border-style: solid;
 }
 
-
-#title-container {
-    width: 100%;
-}
-
-h1 {
-    margin-right: 10px;
-    margin-bottom: 0;
-    text-align: end;
-}
-
 main {
     margin: 20px 10px;
 }
 
 form {
     display: flex;
+    justify-content: center;
     gap: 8px;
 }
 
@@ -39,6 +29,7 @@ form {
     border-radius: 8px;
     box-shadow: #bdd 0 0 4px 1px;
     padding:16px;
+    max-width: 500px;
 }
 
 #note-input button {
@@ -56,7 +47,11 @@ form {
 }
 
 section {
-    margin-top: 2em;
+    margin-top: 1em;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 section>div {
@@ -64,4 +59,16 @@ section>div {
     box-shadow: #577 0 0 4px 1px;
     padding: 16px;
     border-radius: 8px;
+    width: 100%;
+    max-width: 700px;
+}
+
+#title-container {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    margin-right: 10px;
+    margin-bottom: 0;
 }
