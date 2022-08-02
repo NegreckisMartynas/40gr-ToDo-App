@@ -1,6 +1,7 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
 import mysql from 'mysql2';
+import mainPage from './lib/mainPage.js';
 
 const app = express();
 const port = 8081;
@@ -11,7 +12,7 @@ app.engine('hbs', handlebars.engine({
     extname: 'hbs'
 }));
 
-app.get('/', (req, res) => res.render('index'));
+app.get('/', mainPage);
 
 // DB start
 const connection = mysql.createConnection({
