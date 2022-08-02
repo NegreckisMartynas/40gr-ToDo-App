@@ -1,0 +1,67 @@
+body {
+    background-color: #253535;
+    color: #ddf;
+}
+
+hr {
+    border-width: 0;
+    border-bottom-width: 2px;
+    border-color: #bdd;
+    border-style: solid;
+}
+
+
+#title-container {
+    width: 100%;
+}
+
+h1 {
+    margin-right: 10px;
+    margin-bottom: 0;
+    text-align: end;
+}
+
+main {
+    margin: 20px 10px;
+}
+
+form {
+    display: flex;
+    gap: 8px;
+}
+
+#note-input input {
+    flex-grow: 2;
+    background-color: #052020;
+    color: #ddf;
+    font-size: 1.2em;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: #bdd 0 0 4px 1px;
+    padding:16px;
+}
+
+#note-input button {
+    background-color: #5d5;
+    min-width: 80px;
+    max-width: 120px;
+    flex-grow: 1;
+    border: 0;
+    border-radius: 8px;
+    box-shadow: #8f8 0 0 4px 1px;
+}
+#note-input button:hover {
+    background-color: #7f7;
+    box-shadow: #8f8 0 0 6px 2px;
+}
+
+section {
+    margin-top: 2em;
+}
+
+section>div {
+    background-color: #052020;
+    box-shadow: #577 0 0 4px 1px;
+    padding: 16px;
+    border-radius: 8px;
+}
