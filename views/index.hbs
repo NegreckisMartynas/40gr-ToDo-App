@@ -1,18 +1,22 @@
+{{#with model}}
 <div id="title-container">
     <h1>
-        {{model.title}}
+        {{title}}
     </h1>
 </div>
 <hr/>
 <main>
     <form id="note-input" >
-        <input type="text" name="note"
+        <input type="tegetxt" name="note"
                placeholder="Enter a new note here!"/>
         <button type="submit">Save</button>
     </form>
     <section>
+        {{#each notes}}
         <div>
-            <span>Example note text</span>
+            <span>{{this}}</span>
         </div>
+        {{/each}}
     </section>
 </main>
+{{/with}}
