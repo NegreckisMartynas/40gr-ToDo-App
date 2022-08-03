@@ -1,6 +1,6 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
-import {renderMainPage, insertNewNote} from './lib/mainPage.js';
+import {renderMainPage, insertNewNote, deleteNote} from './lib/mainPage.js';
 
 const app = express();
 const port = 8081;
@@ -16,5 +16,6 @@ app.engine('hbs', handlebars.engine({
 
 app.get('/', renderMainPage);
 app.post('/', insertNewNote);
+app.delete('/', deleteNote);
 
 app.listen(port, () => console.log(`Starting server on port ${port}`));
