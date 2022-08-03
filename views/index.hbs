@@ -14,10 +14,14 @@
     <section>
         {{#each notes}}
         <div class="note">
-            <span>{{this}}</span>
+            <span>{{this.note}}</span>
             <div class="buttons">
-                <i class="fa-solid fa-circle-xmark"></i>
-                <i class="fa-solid fa-pen"></i>
+                <button onclick="deleteNote({{this.noteId}})">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+                <button>
+                    <i class="fa-solid fa-pen"></i>
+                </button>
             </div>
         </div>
         
