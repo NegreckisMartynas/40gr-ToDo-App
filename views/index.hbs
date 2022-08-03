@@ -13,9 +13,14 @@
     </form>
     <section>
         {{#each notes}}
-        <div>
+        <div class="note">
             <span>{{this}}</span>
+            <div class="buttons">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <i class="fa-solid fa-pen"></i>
+            </div>
         </div>
+        
         {{/each}}
     </section>
 </main>
