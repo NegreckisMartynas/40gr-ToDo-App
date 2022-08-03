@@ -14,21 +14,5 @@ app.engine('hbs', handlebars.engine({
 
 app.get('/', mainPage);
 
-// DB start
-const connection = mysql.createConnection({
-    host: 'localhost',
-    database: 'classicmodels',
-    user: 'classicmodels',
-    password: 'bit'
-})
-
-app.get('/db', (req, res) => {
-    connection.execute('SELECT productLine, textDescription FROM productlines', (err, rows) => {
-        const data = rows.map(row => row);
-        res.render('db', {data: data});
-    });
-})
-//DB end
-
 
 app.listen(port, () => console.log(`Starting server on port ${port}`));
