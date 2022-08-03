@@ -32,6 +32,12 @@ form {
     max-width: 500px;
 }
 
+#note-input input:focus-visible {
+    outline: none;
+    box-shadow: #bdd 0 0 6px 2px;
+}
+
+
 #note-input button {
     background-color: #5d5;
     min-width: 80px;
@@ -39,7 +45,10 @@ form {
     flex-grow: 1;
     border: 0;
     border-radius: 8px;
-    box-shadow: #8f8 0 0 4px 1px;
+    box-shadow: #8f8 0 0 3px 1px;
+
+    transition: background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: box-shadow 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94)
 }
 #note-input button:hover {
     background-color: #7f7;
@@ -84,11 +93,37 @@ h1 {
     position: absolute;
     top: 4px;
     right: 4px;
+    display: flex;
+    gap: 0.5em;
 }
-.note>.buttons .fa-pen {
-    background-color: #ddf;
-    color:#052020;
-    font-size: 0.7em;
-    padding: 0.3em;
+.note>.buttons i{
+    color: inherit;
+    font-size: 0.8em;
+}
+
+.note>.buttons>button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #ddf; */
+    background: none;
+    color:  #bdd;
+    box-shadow: #bdd 0 0 2px 1px;
+    border: none;
     border-radius: 50px;
+    width: 1.7em;
+    height: 1.7em;
+    cursor: pointer;
+
+    transition: background-color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.note>.buttons i:hover{
+    color: inherit;
+    font-size: 0.8em;
+}
+
+.note>.buttons>button:hover {
+    color:#052020;
+    background-color: #ddf;
 }

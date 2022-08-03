@@ -7,7 +7,7 @@
 <hr/>
 <main>
     <form id="note-input" method="post">
-        <input type="tegetxt" name="note"
+        <input type="text" name="note"
                placeholder="Enter a new note here!"/>
         <button type="submit">Save</button>
     </form>
@@ -16,11 +16,11 @@
         <div class="note">
             <span>{{this.note}}</span>
             <div class="buttons">
-                <button onclick="deleteNote({{this.noteId}})">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                </button>
                 <button>
                     <i class="fa-solid fa-pen"></i>
+                </button>
+                <button onclick="deleteNote({{this.noteId}})">
+                    <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
         </div>
