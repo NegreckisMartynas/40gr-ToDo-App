@@ -8,20 +8,23 @@ function deleteNote(id) {
 }
 
 function editNote(id, clickedButton) {
-    const container = containerOfButton(clickedButton);
-
-    const noteText = container.querySelector('.note-text');
+    const elements = getNoteElements(id, clickedButton);
+    const {container, noteText} = elements
     savedText[id] = noteText; //save initial element to memory
 
     const input = createNoteEditInput(noteText.innerText)
     container.replaceChild(input, noteText);
 
-    enableButtonGroup('edit');
+    enableButtonGroup(container, 'edit');
 }
 
 function saveEdit(id, clickedButton) {
-    restoreNoteTextElement(id, clickedButton, true); // switch input and text, SAVE input
-    enableButtonGroup('standard');
+    const elements = getNoteElements(id, clickedButton);
+    const {container, noteEdit, noteText} = elements;
+    restoreNoteTextElement(elements); 
+    noteText.innerText = noteEdit.value; // switch input and text, SAVE input
+
+    enableButtonGroup(container, 'standard');
 
     fetch('/', {method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' }, 
@@ -30,8 +33,11 @@ function saveEdit(id, clickedButton) {
 }
 
 function undoEdit(id, clickedButton) {
-    restoreNoteTextElement(id, clickedButton, false); // switch input and text, don't save input
-    enableButtonGroup('standard');
+    const elements = getNoteElements(id, clickedButton);
+    const {container} = elements;
+    restoreNoteTextElement(elements); 
+    // switch input and text, don't save input
+    enableButtonGroup(container, 'standard');
 }
 
 
@@ -44,24 +50,34 @@ function createNoteEditInput(initialText) {
     return input;
 }
 
+function getNoteElements(id, clickedButton) {
+    const container = containerOfButton(clickedButton);
+    const noteEdit = container.querySelector('.note-edit');
+    if(noteEdit) {
+        return {
+            container,
+            noteEdit,
+            noteText: savedText[id]
+        }
+    } else {
+        return {
+            container,
+            noteText: container.querySelector('.note-text')
+        }
+    }
+}
+
 function containerOfButton(buttonElement) {
     return buttonElement.parentElement.parentElement;
 }
 
-function restoreNoteTextElement(id, clickedButton, saveInputValue = false) {
-    const container = containerOfButton(clickedButton);
-    const noteEdit = container.querySelector('.note-edit')
-    const noteText = savedText[id]; //get initial element from memory
+function restoreNoteTextElement(elements) {
+    const {container, noteEdit, noteText} = elements;
 
     container.replaceChild(noteText, noteEdit);
-    delete savedText[id]; //remove element from memory
-
-    if(saveInputValue) { // if need to save, change text to input value
-        noteText.innerText = noteEdit.value;
-    }
 }
 
-function enableButtonGroup(groupClass) {
+function enableButtonGroup(container, groupClass) {
     container.querySelectorAll('.buttons>button') 
              .forEach(button => button.classList.add('hidden'));//hide all buttons
     container.querySelectorAll(`.${groupClass}`)
