@@ -8,6 +8,7 @@ app.use(express.static('public'));
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(express.json());
 
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars.engine({
@@ -17,5 +18,9 @@ app.engine('hbs', handlebars.engine({
 app.get('/', renderMainPage);
 app.post('/', insertNewNote);
 app.delete('/', deleteNote);
+app.patch('/', (req, res) => {
+    console.log(req.body);
+    res.redirect(303, '/')
+})
 
 app.listen(port, () => console.log(`Starting server on port ${port}`));

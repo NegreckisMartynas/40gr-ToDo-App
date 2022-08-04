@@ -127,3 +127,11 @@ h1 {
     color:#052020;
     background-color: #ddf;
 }
+
+.note-text[contenteditable="true"] {
+    color: #faa;
+}
+
+.hidden {
+    display: none !important;
+}

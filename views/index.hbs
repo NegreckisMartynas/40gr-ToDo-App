@@ -14,13 +14,19 @@
     <section>
         {{#each notes}}
         <div class="note">
-            <span>{{this.note}}</span>
+            <span class="note-text">{{this.note}}</span>
             <div class="buttons">
-                <button>
+                <button onclick="editNote({{this.noteId}}, this)"class="standard">
                     <i class="fa-solid fa-pen"></i>
                 </button>
-                <button onclick="deleteNote({{this.noteId}})">
+                <button onclick="deleteNote({{this.noteId}})" class="standard">
                     <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button onclick="saveEdit({{this.noteId}}, this)" class="edit hidden">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button onclick="undoEdit(this)" class="edit hidden">
+                    <i class="fa-solid fa-rotate-left"></i>
                 </button>
             </div>
         </div>
