@@ -10,30 +10,34 @@ function editNote(id, element) {
                              .parentElement;
 
     const noteText = container.querySelector('.note-text');
-    noteText.contentEditable = true;
+    savedText[id] = noteText;
 
-    savedText[id] = noteText.innerText;
-
-    container.remove(noteText);
+    const input = document.createElement('input');
+    input.classList.add('note-edit')
+    input.type = 'text';
+    input.value = noteText.innerText;
+    container.replaceChild(input, noteText);
 
     container.querySelectorAll('.buttons>button')
              .forEach(button => button.classList.add('hidden'));
     container.querySelectorAll('.edit')
              .forEach(button => button.classList.remove('hidden'));
-
-    console.log(id, noteText);
 }
 
 function saveEdit(id, element) {
     const container = element.parentElement
                              .parentElement;
 
-    const noteText = container.querySelector('.note-text');
-    noteText.contentEditable = false;
+    const noteEdit = container.querySelector('.note-edit')
+    const noteText = savedText[id];
+
+    container.replaceChild(noteText, noteEdit);
+    delete savedText[id];
+    noteText.innerText = noteEdit.value;
 
     fetch('/', {method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({id, note: noteText.innerText})}
+                body: JSON.stringify({id, note: noteEdit.value})}
     )
 
     container.querySelectorAll('.buttons>button')
@@ -46,10 +50,10 @@ function undoEdit(id, element) {
     const container = element.parentElement
                              .parentElement;
 
-    const noteText = container.querySelector('.note-text');
-    noteText.contentEditable = false;
+    const noteEdit = container.querySelector('.note-edit')
+    const noteText = savedText[id];
 
-    noteText.innerText = savedText[id];
+    container.replaceChild(noteText, noteEdit);
     delete savedText[id];
 
     container.querySelectorAll('.buttons>button')

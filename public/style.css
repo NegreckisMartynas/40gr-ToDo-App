@@ -127,3 +127,7 @@ h1 {
     color:#052020;
     background-color: #ddf;
 }
+
+.hidden {
+    display: none !important;
+}
