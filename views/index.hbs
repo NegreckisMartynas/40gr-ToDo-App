@@ -22,9 +22,14 @@
                 <button onclick="deleteNote({{this.noteId}})">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
+                <button onclick="saveEdit({{this.noteId}}, this)" class="edit hidden">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button onclick="undoEdit({{this.noteId}}, this)" class="edit hidden">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
             </div>
         </div>
-        
         {{/each}}
     </section>
 </main>
