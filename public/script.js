@@ -38,8 +38,9 @@ function saveEdit(id, element) {
     const noteText = container.querySelector('.note-text');
     noteText.contentEditable = false;
 
-    fetch('/', {method: 'PATCH', 
-                body: {id, note: noteText.innerText}}
+    fetch('/', {method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({id, note: noteText.innerText})}
     )
 
     container.querySelectorAll('.buttons>button')
