@@ -5,34 +5,32 @@ function deleteNote(id) {
         .then(res => window.location = res.url);
 }
 
-function editNote(id, element) {
-    const container = element.parentElement
-                             .parentElement;
+function editNote(id, clickedButton) {
+    const container = containerOfButton(clickedButton);
 
     const noteText = container.querySelector('.note-text');
     savedText[id] = noteText;
 
+    const input = createNoteEditInput(noteText.innerText)
+    container.replaceChild(input, noteText);
+
+    enableButtonGroup('edit');
+}
+
+function createNoteEditInput(initialText) {
     const input = document.createElement('input');
     input.classList.add('note-edit')
     input.type = 'text';
-    input.value = noteText.innerText;
-    container.replaceChild(input, noteText);
-
-    container.querySelectorAll('.buttons>button')
-             .forEach(button => button.classList.add('hidden'));
-    container.querySelectorAll('.edit')
-             .forEach(button => button.classList.remove('hidden'));
+    input.value = initialText;
+    return input;
 }
 
-function saveEdit(id, element) {
-    const container = element.parentElement
-                             .parentElement;
+function containerOfButton(buttonElement) {
+    return buttonElement.parentElement.parentElement;
+}
 
-    const noteEdit = container.querySelector('.note-edit')
-    const noteText = savedText[id];
-
-    container.replaceChild(noteText, noteEdit);
-    delete savedText[id];
+function saveEdit(id, clickedButton) {
+    const [noteEdit, noteText] = restoreNoteTextElement(id, clickedButton);
     noteText.innerText = noteEdit.value;
 
     fetch('/', {method: 'PATCH',
@@ -40,24 +38,28 @@ function saveEdit(id, element) {
                 body: JSON.stringify({id, note: noteEdit.value})}
     )
 
-    container.querySelectorAll('.buttons>button')
-             .forEach(button => button.classList.add('hidden'));
-    container.querySelectorAll('.standard')
-             .forEach(button => button.classList.remove('hidden'));
+    enableButtonGroup('standard');
 }
 
-function undoEdit(id, element) {
-    const container = element.parentElement
-                             .parentElement;
+function undoEdit(id, clickedButton) {
+    restoreNoteTextElement(id, clickedButton);
+    enableButtonGroup('standard');
+}
 
+function restoreNoteTextElement(id, clickedButton) {
+    const container = containerOfButton(clickedButton);
     const noteEdit = container.querySelector('.note-edit')
     const noteText = savedText[id];
 
     container.replaceChild(noteText, noteEdit);
     delete savedText[id];
 
-    container.querySelectorAll('.buttons>button')
-             .forEach(button => button.classList.add('hidden'));
-    container.querySelectorAll('.standard')
-             .forEach(button => button.classList.remove('hidden'));
+    return [noteEdit, noteText];
+}
+
+function enableButtonGroup(groupClass) {
+    container.querySelectorAll('.buttons>button') 
+             .forEach(button => button.classList.add('hidden'));//hide all buttons
+    container.querySelectorAll(`.${groupClass}`)
+             .forEach(button => button.classList.remove('hidden'));//unhide only required buttons
 }
