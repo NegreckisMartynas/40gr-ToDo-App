@@ -9,9 +9,9 @@ export async function selectNotes(connection) {
     });
 } 
 
-export async function insertNote(connection, note) {
+export async function insertNote(connection, note, priority) {
     return await new Promise((resolve, reject) => {
-        connection.execute('INSERT notes(note) VALUES(?)', [note], (err, _) => {
+        connection.execute('INSERT notes(note, priority) VALUES(?, ?)', [note, priority], (err, _) => {
             if(err) return reject(err);
             resolve();
         });

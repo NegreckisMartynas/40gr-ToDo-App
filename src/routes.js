@@ -18,10 +18,12 @@ export function getNotes(req, res) {
 }
 
 export function addNote(req, res) {
+    console.log(req.body);
     const newNote = req.body.note;
+    const priority = req.body.priority;
     const connection = connect();
     Promise.resolve()
-        .then(_ => db.insertNote(connection, newNote))
+        .then(_ => db.insertNote(connection, newNote, priority))
         .then(_ => res.redirect('/'))
         .catch(err => {
             console.log(err);
