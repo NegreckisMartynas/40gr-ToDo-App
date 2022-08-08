@@ -11,11 +11,17 @@
                placeholder="Enter a new note here!"/>
         <input type="number" name="priority"
                placeholder="Priority"/>
+        <select name="style">
+            <option value="0">Default</option>
+            <option value="1">Red</option>
+            <option value="2">Yellow</option>
+            <option value="3">Green</option>
+        </select>
         <button type="submit">Save</button>
     </form>
     <section>
         {{#each notes}}
-        <div class="note">
+        <div class="note {{#if this.style}}style-{{this.style}}{{/if}}" >
             <span class="note-text">
                 {{this.note}}
             </span>

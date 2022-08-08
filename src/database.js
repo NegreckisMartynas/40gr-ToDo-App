@@ -1,8 +1,8 @@
 export async function selectNotes(connection) {
     return await new Promise((resolve, reject) => {
-        connection.execute('SELECT noteId, note, priority from notes ORDER BY priority DESC;', (err, rows) => {
+        connection.execute('SELECT n.noteId, note, priority, style from notes n LEFT JOIN note_style ns ON n.noteId = ns.noteId ORDER BY priority DESC;', (err, rows) => {
             if(err) return reject(err);
-
+            console.log(rows);
             const notes = rows;
             return resolve(notes);
         })
