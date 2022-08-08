@@ -16,7 +16,12 @@
     <section>
         {{#each notes}}
         <div class="note">
-            <span class="note-text">{{this.note}}</span>
+            <span class="note-text">
+                {{this.note}}
+            </span>
+            <span class="note-priority">
+                priority: {{this.priority}}
+            </span>
             <div class="buttons">
                 <button onclick="editNote({{this.noteId}}, this)" class="standard">
                     <i class="fa-solid fa-pen"></i>

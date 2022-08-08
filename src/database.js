@@ -1,6 +1,6 @@
 export async function selectNotes(connection) {
     return await new Promise((resolve, reject) => {
-        connection.execute('SELECT noteId, note from notes;', (err, rows) => {
+        connection.execute('SELECT noteId, note, priority from notes ORDER BY priority DESC;', (err, rows) => {
             if(err) return reject(err);
 
             const notes = rows;
