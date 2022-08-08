@@ -1,4 +1,4 @@
-import { connect } from "./connect.js";
+import { connect, getConnection, releaseConnection } from "./connect.js";
 import * as db from "./database.js";
 
 export function getNotes(req, res) {
@@ -20,9 +20,20 @@ export function getNotes(req, res) {
 export function addNote(req, res) {
     console.log(req.body);
     const {note, priority, style} = req.body;
-    const connection = connect();
     Promise.resolve()
-        .then(_ => db.insertNote(connection, note, priority))
+        .then(_ => getConnection())
+        .then(async connection => {
+            await db.insertNote(connection, note, priority); 
+            return connection; // pass same connection for other queries
+        })
+        .then(async connection => {
+            const id = await db.lastInsertRow(connection);
+            return [id, connection];
+        })
+        .then(([noteId, connection]) => {
+            db.insertStyle(connection, noteId, style)
+              .then(_ => releaseConnection(connection));
+        })
         .then(_ => res.redirect('/'))
         .catch(err => {
             console.log(err);

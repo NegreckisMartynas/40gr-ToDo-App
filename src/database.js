@@ -18,6 +18,25 @@ export async function insertNote(connection, note, priority) {
     });
 }
 
+export async function lastInsertRow(connection) {
+    return await new Promise((resolve, reject) => {
+        connection.execute('SELECT id FROM last_insert_row;', (err, result) => {
+            if(err) return reject(err);
+            console.log('lastInsertRow');
+            resolve(result[0].id);
+        });
+    });
+}
+
+export async function insertStyle(connection, noteId, style) {
+    return await new Promise((resolve, reject) => {
+        connection.execute('INSERT note_style(noteId, style) VALUES(?, ?)', [noteId, style], (err, result) => {
+            if(err) return reject(err);
+            resolve();
+        });
+    });
+}
+
 export async function deleteNote(connection, noteId) {
     return await new Promise((resolve, reject) => {
         connection.execute('DELETE FROM notes WHERE noteId = ?', [noteId], (err, _) => {
