@@ -27,9 +27,9 @@
                placeholder="Priority"/>
         <select name="style">
             <option value="0">Default</option>
-            <option value="1">Red</option>
-            <option value="2">Yellow</option>
-            <option value="3">Green</option>
+            {{#each styles}}
+            <option value="{{this.styleId}}">{{this.name}}</option>
+            {{/each}}
         </select>
         <button type="submit">Save</button>
     </form>
