@@ -18,6 +18,7 @@ export async function selectStyles(connection) {
 } 
 
 export async function insertNote(connection, note, priority) {
+    priority = (!priority || priority.length == 0) ? '0' : priority;
     return await new Promise((resolve, reject) => {
         connection.execute('INSERT notes(note, priority) VALUES(?, ?)', [note, priority], (err, _) => {
             if(err) return reject(err);
@@ -37,6 +38,8 @@ export async function lastInsertRow(connection) {
 }
 
 export async function insertStyle(connection, noteId, style) {
+    if(style == '0') return; //guarding clause
+
     return await new Promise((resolve, reject) => {
         connection.execute('INSERT note_style(noteId, style) VALUES(?, ?)', [noteId, style], (err, result) => {
             if(err) return reject(err);

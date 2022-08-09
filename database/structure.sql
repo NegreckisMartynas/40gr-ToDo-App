@@ -38,7 +38,10 @@ DROP TABLE IF EXISTS `note_style`;
 CREATE TABLE `note_style` (
   `noteId` int(10) unsigned NOT NULL,
   `style` int(10) unsigned NOT NULL DEFAULT 0,
-  UNIQUE KEY `note_style_UN` (`noteId`)
+  UNIQUE KEY `note_style_UN` (`noteId`),
+  KEY `note_style->style` (`style`),
+  CONSTRAINT `note_style->notes` FOREIGN KEY (`noteId`) REFERENCES `notes` (`noteId`) ON DELETE CASCADE,
+  CONSTRAINT `note_style->style` FOREIGN KEY (`style`) REFERENCES `style` (`styleId`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -54,7 +57,7 @@ CREATE TABLE `notes` (
   `note` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `priority` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`noteId`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +73,7 @@ CREATE TABLE `style` (
   `bodyCSS` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `priorityCSS` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`styleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,4 +108,4 @@ CREATE TABLE `style` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-09 19:10:24
+-- Dump completed on 2022-08-09 21:01:31
