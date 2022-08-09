@@ -21,14 +21,16 @@
 <hr/>
 <main>
     <form id="note-input" method="post">
-        <input type="text" name="note"
+        <div class="note-input note-text">
+            <input type="text" name="note" class="note"
                placeholder="Enter a new note here!"/>
-        <input type="number" name="priority"
-               placeholder="Priority"/>
-        <select name="style">
-            <option value="0">Default</option>
+            <input type="number" name="priority" class="priority"
+                placeholder="Priority"/>
+        </div>
+        <select name="style" class="note-input note-style">
+            <option value="0" class="note">Default</option>
             {{#each styles}}
-            <option value="{{this.styleId}}">{{this.name}}</option>
+            <option value="{{this.styleId}}" class="note style-{{this.styleId}}">{{this.name}}</option>
             {{/each}}
         </select>
         <button type="submit">Save</button>

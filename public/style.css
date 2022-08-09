@@ -14,27 +14,67 @@ main {
     margin: 20px 10px;
 }
 
-form {
+form#note-input {
     display: flex;
     justify-content: center;
     gap: 8px;
 }
 
-#note-input input {
+.note-input.note-text {
+    max-width: 500px;
     flex-grow: 2;
+}
+
+.note-input {
     background-color: #052020;
     color: #ddf;
-    font-size: 1.2em;
+    box-shadow: #bdd 0 0 4px 1px;
+
     border: 0;
     border-radius: 8px;
-    box-shadow: #bdd 0 0 4px 1px;
     padding:16px;
-    max-width: 500px;
+    
+    display: flex;
+}
+
+.note-input.note-style option::before {
+    width: 16px;
+    height: 16px;
+    background-color: red;
+}
+
+.note-input .note,
+.note-input .priority
+{
+    color: #ddf;
+    color-scheme: dark;
+    background: #052020;
+    border: none;
+}
+
+.note-input .note {
+    font-size: 1.2em;
+    flex-grow: 1;
+}
+
+.note-input .priority
+{
+    border-bottom: 1px dotted #799;
+    text-align: center;
+    width: 70px;
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.note-input .priority::-webkit-inner-spin-button {
+    display: none;
 }
 
 #note-input input:focus-visible {
     outline: none;
-    box-shadow: #bdd 0 0 6px 2px;
+    background-color: #799;
+    box-shadow: #bdd 0 0 4px 0px;
 }
 
 
