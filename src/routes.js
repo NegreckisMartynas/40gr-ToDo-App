@@ -5,10 +5,12 @@ export function getNotes(req, res) {
     const model = {};
     model.title = 'My To-do App';
     
-    const connection = connect();
     Promise.resolve()
-        .then(_ => db.selectNotes(connection))
-        .then(notes => ({...model, notes}))
+        .then(_ => Promise.all([
+            db.selectNotes(connect()),
+            db.selectStyles(connect())
+        ]))
+        .then(([notes, styles]) => ({...model, notes, styles}))
         .then(model => res.render('index', {model}))
         .catch(err => {
             console.log(err);
