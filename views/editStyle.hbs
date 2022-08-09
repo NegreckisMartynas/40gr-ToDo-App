@@ -1,0 +1,70 @@
+<div id="title-container">
+    <h1>
+        Edit style
+    </h1>
+</div>
+<hr/>
+<main>
+    <style id="editable-styles">
+        .note.style-edited {
+
+        }
+
+        .note.style-edited .note-priority {
+            
+        }
+    </style>
+    <section>
+        <div class="note style-edited" >
+            <span class="note-text">
+                Example Text
+            </span>
+            <span class="note-priority">
+                priority: 1000
+            </span>
+            <div class="buttons">
+                <button onclick="" class="standard">
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+                <button onclick=""  class="standard">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <button onclick="" class="edit hidden">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                </button>
+                <button onclick="" class="edit hidden">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    <form method="post">
+        <div>
+            <span>Background color</span><input type="color" name="background-color" onchange="changeEditableStyles()"/>
+            <span>Text color</span><input type="color" name="color"/>
+            <span>Priority color</span><input type="color" name="priority-color"/>
+            <submit></submit>
+        </div>
+    </form>
+    <script>
+        function changeEditableStyles() {
+            //get input values
+            //generate CSS styles
+            //change #editable-styles content
+            const bgInput = document.querySelector('form').elements["background-color"];
+            const bgColor = bgInput.value;
+            const style =
+`
+        .note.style-edited {
+            background-color: ${bgColor}
+        }
+
+        .note.style-edited .note-priority {
+            
+        }
+`       
+            document.querySelector('#editable-styles').innerText = style;
+        }
+
+    </script>
+</main>

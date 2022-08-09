@@ -20,4 +20,7 @@ app.post('/', addNote);
 app.delete('/', deleteNote);
 app.patch('/', updateNote);
 
+app.get('/edit', (req, res) => res.render('editStyle'));
+app.post('/edit', (req, res) => /* req.body == submitted form; insert into styles table*/ res.send('WIP'));
+
 app.listen(port, () => console.log(`Starting server on port ${port}`));
