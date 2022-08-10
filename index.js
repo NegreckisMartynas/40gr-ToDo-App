@@ -2,6 +2,7 @@ import express from 'express';
 import handlebars from 'express-handlebars';
 import {getNotes, addNote, deleteNote, updateNote} from './src/routes.js';
 import { handleLogin, handleRegistration, loginPage, startRegistration,  } from './src/user-routes.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const port = 8081;
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(cookieParser()); 
 
 app.set('view engine', 'hbs');
 app.engine('hbs', handlebars.engine({

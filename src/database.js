@@ -93,3 +93,12 @@ export async function insertToken(connection, token, userId) {
         });
     })
 }
+
+export async function selectToken(connection, token) {
+    return await new Promise((resolve, reject) => {
+        connection.execute('SELECT * FROM loginTokens WHERE token = ?;', [token] , (err, result) => {
+            if(err) return reject(err);
+            resolve(!!result[0]);
+        });
+    });
+}
