@@ -1,18 +1,5 @@
 {{#with model}}
-<style>
-    {{#each styles}}
-        {{#if this.bodyCSS}}
-            .note.style-{{this.styleId}} {
-                {{this.bodyCSS}}
-            }
-        {{/if}}
-        {{#if this.priorityCSS}}
-            .note.style-{{this.styleId}} .note-priority {
-                {{this.priorityCSS}}
-            }
-        {{/if}}
-    {{/each}}
-</style>
+{{> dynamic-style this }}
 <div id="title-container">
     <h1>
         {{title}}
