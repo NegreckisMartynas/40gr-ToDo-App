@@ -56,12 +56,14 @@ export function handleLogin(req, res) {
     //get password hash for username
     Promise.resolve()
            .then(_ => db.selectUserByUsername(connect(), username))
-           .then(user => bcrypt.compare(password, user.passwordHash))
-           .then(isCorrectPassword => {
+           .then(async user => ([user, await bcrypt.compare(password, user.passwordHash)]))
+           .then(async ([user, isCorrectPassword]) => {
                 if(isCorrectPassword) {
                     const token = uuid();
-                    res.cookie('authToken', token);
-                    res.redirect('/');
+                    await db.insertToken(connect(), token, user.userId).then(_ =>{
+                        res.cookie('authToken', token);
+                        res.redirect('/');
+                    });
                 } else {
                     throw new Error('Invalid password')
                 }

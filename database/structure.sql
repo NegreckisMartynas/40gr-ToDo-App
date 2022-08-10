@@ -29,6 +29,23 @@ SET character_set_client = utf8;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Table structure for table `loginTokens`
+--
+
+DROP TABLE IF EXISTS `loginTokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `loginTokens` (
+  `userId` int(10) unsigned NOT NULL,
+  `token` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+  UNIQUE KEY `loginTokens_UN` (`token`),
+  KEY `loginTokens_FK` (`userId`),
+  CONSTRAINT `loginTokens_FK` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `note_style`
 --
 
@@ -57,7 +74,7 @@ CREATE TABLE `notes` (
   `note` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `priority` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`noteId`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,6 +91,22 @@ CREATE TABLE `style` (
   `priorityCSS` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`styleId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `userId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `passwordHash` char(60) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`userId`),
+  UNIQUE KEY `users_UN` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,4 +141,4 @@ CREATE TABLE `style` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-09 21:01:31
+-- Dump completed on 2022-08-10 21:33:24

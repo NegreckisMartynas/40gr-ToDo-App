@@ -84,3 +84,12 @@ export async function selectUserByUsername(connection, username) {
         });
     });
 }
+
+export async function insertToken(connection, token, userId) {
+    return await new Promise((resolve, reject) => {
+        connection.execute('INSERT loginTokens(userId, token) VALUES(?, ?)', [userId, token], (err, _) => {
+            if(err) return reject(err);
+            resolve();
+        });
+    })
+}
