@@ -65,3 +65,12 @@ export async function updateNote(connection, noteId, note) {
         });
     })
 }
+
+export async function insertUser(connection, username, hash) {
+    return await new Promise((resolve, reject) => {
+        connection.execute('INSERT users(username, passwordHash) VALUES(?, ?)', [username, hash], (err, _) => {
+            if(err) return reject(err);
+            resolve();
+        });
+    })
+}
