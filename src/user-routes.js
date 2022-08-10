@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
 import * as db from "./database.js";
 import {connect} from "./connect.js";
+import {v4 as uuid} from 'uuid';
+
 //send registration page
 export function startRegistration(req, res) {
     let error = null;
@@ -44,10 +46,32 @@ export function handleRegistration(req, res) {
 
 //send login page
 export function loginPage(req, res) {
-    res.send('Login page');
+
+    res.render('login', {model: {hasError: req.query.error}});
 }
 
 //login user or send back on error
 export function handleLogin(req, res) {
+    const {username, password} = req.body;
+    //get password hash for username
+    Promise.resolve()
+           .then(_ => db.selectUserByUsername(connect(), username))
+           .then(user => bcrypt.compare(password, user.passwordHash))
+           .then(isCorrectPassword => {
+                if(isCorrectPassword) {
+                    const token = uuid();
+                    res.cookie('authToken', token);
+                    res.redirect('/');
+                } else {
+                    throw new Error('Invalid password')
+                }
+            })
+            .catch(err => {
+                console.log(err);
+                res.redirect('/login?error=true');;
+            })
 
+
+    //if password matches: go to /
+    //if password doesn't match: return to /login with error
 }
