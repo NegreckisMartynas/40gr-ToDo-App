@@ -13,13 +13,13 @@ export async function withSameConnection(...args) {
                      .finally(() => releaseConnection(connection))//release connection when done
 }
 
-// export async function asyncPipeArgs(...functions) {
+// export async function asyncPipeVarargs(...functions) {
 //     return await asyncPipe([...functions]);
 // }
 
-// export async function asyncPipe(functions) {
-//     return await functions.reduce((f, g) => f.then(g), Promise.resolve());
-// }
+export async function asyncPipe(...functions) {
+    return await functions.reduce((f, g) => f.then(g), Promise.resolve());
+}
 
 // export function startWithArgs(parameter) {
 //     return (...args) => startWith(parameter)([...args]);
@@ -37,3 +37,12 @@ export async function withSameConnection(...args) {
 //                     asyncPipe
 //                 ).finally(() => releaseConnection(connection));
 // }
+
+export async function doInOrder(...functions) {
+    const map = new Map();
+    const storeFunc = (key, value) => map.set(key, value);
+    const takeFunc = (key) => map.get(key);
+    return await functions.reduce(([f, store, take], g) => 
+        [f.then((result) => g(result, store, take)), store, take], 
+    [Promise.resolve(), storeFunc, takeFunc]);
+}

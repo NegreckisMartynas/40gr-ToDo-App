@@ -57,9 +57,9 @@ export async function deleteNote(connection, noteId, userId) {
     })
 }
 
-export async function updateNote(connection, noteId, note) {
+export async function updateNote(connection, noteId, note, userId) {
     return await new Promise((resolve, reject) => {
-        connection.execute('UPDATE notes SET note=? WHERE noteId=?', [note, noteId], (err, _) => {
+        connection.execute('UPDATE notes SET note=? WHERE noteId=? AND userId=?', [note, noteId, userId], (err, _) => {
             if(err) return reject(err);
             resolve();
         });

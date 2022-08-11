@@ -1,22 +1,29 @@
 import { connect } from "./connect.js";
 import * as db from "./database.js";
-import { withSameConnection } from "./util.js"; 
+import { asyncPipe, withSameConnection, doInOrder } from "./util.js"; 
 
 export function getNotes(req, res) {
-    const model = {};
-    model.title = 'My To-do App';
-
-    Promise.resolve()
-        .then(_ => authenticate(req))
-        .then(userId => Promise.all([
+    // Promise.resolve()
+    //     .then(_ => authenticate(req))
+    //     .then(userId => Promise.all([
+    //         db.selectNotes(connect(), userId),
+    //         db.selectStyles(connect())
+    //     ]))
+    //     .then(([notes, styles]) => ({...model, notes, styles}))
+    //     .then(model => res.render('index', {model}))
+    //     .catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
+    //     .catch(err => renderError(err, res)); // else render generic error page
+    doInOrder(
+        (_, store) => store('model', {title: 'My To-do App'}),
+        _ => authenticate(req),
+        userId => Promise.all([
             db.selectNotes(connect(), userId),
-            db.selectStyles(connect())
-        ]))
-        .then(([notes, styles]) => ({...model, notes, styles}))
-        .then(model => res.render('index', {model}))
-        .catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
-        .catch(err => renderError(err, res)); // else render generic error page
-
+            db.selectStyles(connect()),  
+        ]),
+        ([notes, styles], _, take) => ({...take('model'), notes, styles}),
+        model => res.render('index', {model})
+    ).catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
+     .catch(err => renderError(err, res)); // else render generic error page
 }
 
 export function addNote(req, res) {
@@ -52,7 +59,8 @@ export function updateNote(req, res) {
     const id = req.body.id;
     const note = req.body.note;
     Promise.resolve()
-           .then(_ => db.updateNote(connect(), id, note))
+           .then(_ => authenticate(req))
+           .then(userId => db.updateNote(connect(), id, note, userId))
            .then(_ => res.status(200).send())
            .catch(err => onNoAuthDo(err, _ => res.status(403).send()))
            .catch(err => {
@@ -67,7 +75,6 @@ async function authenticate(req) {
     if(!tokenData) {
         throw 'no auth';
     }
-    console.log(tokenData);
     return tokenData.userId;
 }
 
