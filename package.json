@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -e hbs,css,js"
+    "dev": "nodemon -e hbs,css,js",
+    "cron": "node cron.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,6 +16,7 @@
     "express": "^4.18.1",
     "express-handlebars": "^6.0.6",
     "mysql2": "^2.3.3",
+    "node-cron": "^3.0.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
