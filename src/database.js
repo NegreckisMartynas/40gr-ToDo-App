@@ -48,9 +48,9 @@ export async function insertStyle(connection, noteId, style) {
     });
 }
 
-export async function deleteNote(connection, noteId) {
+export async function deleteNote(connection, noteId, userId) {
     return await new Promise((resolve, reject) => {
-        connection.execute('DELETE FROM notes WHERE noteId = ?', [noteId], (err, _) => {
+        connection.execute('DELETE FROM notes WHERE noteId = ? AND userId = ?', [noteId, userId], (err, _) => {
             if(err) return reject(err);
             resolve();
         });

@@ -51,10 +51,11 @@ export function addNote(req, res) {
 } 
 
 export function deleteNote(req, res) {
-    const id = req.query.id;
+    const noteId = req.query.id;
     const connection = connect();
     Promise.resolve()
-        .then(_ => db.deleteNote(connection, id))
+        .then(_ => authenticate(req))
+        .then(userId => db.deleteNote(connection, noteId, userId))
         .then(_ => res.redirect(303, '/'))
         .catch(err => {
             console.log(err);
