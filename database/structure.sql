@@ -73,9 +73,29 @@ CREATE TABLE `notes` (
   `noteId` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `note` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `priority` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`noteId`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `userId` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`noteId`),
+  KEY `notes->users` (`userId`),
+  CONSTRAINT `notes->users` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary table structure for view `notes_with_styles`
+--
+
+DROP TABLE IF EXISTS `notes_with_styles`;
+/*!50001 DROP VIEW IF EXISTS `notes_with_styles`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `notes_with_styles` (
+  `noteId` tinyint NOT NULL,
+  `note` tinyint NOT NULL,
+  `priority` tinyint NOT NULL,
+  `style` tinyint NOT NULL,
+  `userId` tinyint NOT NULL
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `style`
@@ -131,6 +151,25 @@ CREATE TABLE `users` (
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `notes_with_styles`
+--
+
+/*!50001 DROP TABLE IF EXISTS `notes_with_styles`*/;
+/*!50001 DROP VIEW IF EXISTS `notes_with_styles`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`martynas_n`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `notes_with_styles` AS select `n`.`noteId` AS `noteId`,`n`.`note` AS `note`,`n`.`priority` AS `priority`,`ns`.`style` AS `style`,`n`.`userId` AS `userId` from (`notes` `n` left join `note_style` `ns` on(`n`.`noteId` = `ns`.`noteId`)) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -141,4 +180,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-10 21:33:24
+-- Dump completed on 2022-08-11 21:04:13
