@@ -1,6 +1,6 @@
-export async function selectNotes(connection) {
+export async function selectNotes(connection, userId) {
     return await new Promise((resolve, reject) => {
-        connection.execute('SELECT n.noteId, note, priority, style from notes n LEFT JOIN note_style ns ON n.noteId = ns.noteId ORDER BY priority DESC;', (err, rows) => {
+        connection.execute('SELECT noteId, note, priority, `style` FROM notes_with_styles WHERE userId = ? ORDER BY priority DESC;', [userId], (err, rows) => {
             if(err) return reject(err);
             const notes = rows;
             return resolve(notes);
@@ -17,10 +17,10 @@ export async function selectStyles(connection) {
     });
 } 
 
-export async function insertNote(connection, note, priority) {
+export async function insertNote(connection, note, priority, userId) {
     priority = (!priority || priority.length == 0) ? '0' : priority;
     return await new Promise((resolve, reject) => {
-        connection.execute('INSERT notes(note, priority) VALUES(?, ?)', [note, priority], (err, _) => {
+        connection.execute('INSERT notes(note, priority, userId) VALUES(?, ?, ?)', [note, priority, userId], (err, _) => {
             if(err) return reject(err);
             resolve();
         });
@@ -98,7 +98,7 @@ export async function selectToken(connection, token) {
     return await new Promise((resolve, reject) => {
         connection.execute('SELECT * FROM loginTokens WHERE token = ?;', [token] , (err, result) => {
             if(err) return reject(err);
-            resolve(!!result[0]);
+            resolve(result[0]);
         });
     });
 }

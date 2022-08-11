@@ -9,8 +9,8 @@ export function getNotes(req, res) {
     
     Promise.resolve()
         .then(_ => authenticate(req))
-        .then(_ => Promise.all([
-            db.selectNotes(connect()),
+        .then(userId => Promise.all([
+            db.selectNotes(connect(), userId),
             db.selectStyles(connect())
         ]))
         .then(([notes, styles]) => ({...model, notes, styles}))
@@ -29,9 +29,10 @@ export function addNote(req, res) {
     console.log(req.body);
     const {note, priority, style} = req.body;
     Promise.resolve()
-        .then(_ => getConnection())
-        .then(async connection => {
-            await db.insertNote(connection, note, priority); 
+        .then(_ => authenticate(req))
+        .then(async userId => ([userId, await getConnection()]))
+        .then(async ([userId, connection]) => {
+            await db.insertNote(connection, note, priority, userId); 
             return connection; // pass same connection for other queries
         })
         .then(async connection => {
@@ -75,7 +76,10 @@ export function updateNote(req, res) {
 
 async function authenticate(req) {
     const token = req.cookies.authToken || '';
-    if(! await db.selectToken(connect(), token)) {
+    const tokenData = await db.selectToken(connect(), token);
+    if(!tokenData) {
         throw 'no auth';
     }
+    console.log(tokenData);
+    return tokenData.userId;
 }
