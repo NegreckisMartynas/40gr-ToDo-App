@@ -1,5 +1,6 @@
-import { connect, getConnection, releaseConnection } from "./connect.js";
+import { connect } from "./connect.js";
 import * as db from "./database.js";
+import { withSameConnection } from "./util.js"; 
 
 export function getNotes(req, res) {
     const model = {};
@@ -26,28 +27,22 @@ export function getNotes(req, res) {
 }
 
 export function addNote(req, res) {
-    console.log(req.body);
     const {note, priority, style} = req.body;
     Promise.resolve()
         .then(_ => authenticate(req))
-        .then(async userId => ([userId, await getConnection()]))
-        .then(async ([userId, connection]) => {
-            await db.insertNote(connection, note, priority, userId); 
-            return connection; // pass same connection for other queries
-        })
-        .then(async connection => {
-            const id = await db.lastInsertRow(connection);
-            return [id, connection];
-        })
-        .then(([noteId, connection]) => {
-            db.insertStyle(connection, noteId, style)
-              .then(_ => releaseConnection(connection));
-        })
+        .then(userId => 
+            withSameConnection(
+                (connection)         => db.insertNote(connection, note, priority, userId),
+                (connection)         => db.lastInsertRow(connection),
+                (connection, noteId) => db.insertStyle(connection, noteId, style)
+            )
+        )
         .then(_ => res.redirect('/'))
         .catch(err => {
             console.log(err);
             res.render('error', {model: {errorName: err.name, message: err.message, stack: err.stack}});
         });
+
 } 
 
 export function deleteNote(req, res) {
