@@ -1,9 +1,10 @@
-import {doInOrder} from './src/util.js'
+import {asyncPipeWithMap} from './src/util.js'
 
 
-doInOrder(
-    _           => console.log('start'),
-    (_, store)  => store('a', 10),
-    (_, store)  => store('b', 15),
-    (_,__, take) => console.log(take('a') + take('b'))
+asyncPipeWithMap(
+    (_)       => console.log('start'),
+    (_, map)  => map.set('a', 10),
+    (_, map)  => map.set('b', 15),
+    (_, map)  => map.get('a') + map.get('b'),
+    (sum)     => console.log(sum)
 ).finally(_ => console.log('done'));

@@ -1,6 +1,6 @@
 import { connect } from "./connect.js";
 import * as db from "./database.js";
-import { asyncPipe, withSameConnection, doInOrder } from "./util.js"; 
+import { withSameConnection } from "./util.js"; 
 
 export function getNotes(req, res) {
     // Promise.resolve()
@@ -13,14 +13,14 @@ export function getNotes(req, res) {
     //     .then(model => res.render('index', {model}))
     //     .catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
     //     .catch(err => renderError(err, res)); // else render generic error page
-    doInOrder(
-        (_, store) => store('model', {title: 'My To-do App'}),
+    asyncPipeWithMap(
+        (_, map) => map.set('model', {title: 'My To-do App'}),
         _ => authenticate(req),
         userId => Promise.all([
             db.selectNotes(connect(), userId),
             db.selectStyles(connect()),  
         ]),
-        ([notes, styles], _, take) => ({...take('model'), notes, styles}),
+        ([notes, styles], map) => ({...map.get('model'), notes, styles}),
         model => res.render('index', {model})
     ).catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
      .catch(err => renderError(err, res)); // else render generic error page
