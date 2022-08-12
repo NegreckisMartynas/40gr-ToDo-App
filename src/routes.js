@@ -1,26 +1,16 @@
 import { connect } from "./connect.js";
 import * as db from "./database.js";
-import { withSameConnection } from "./util.js"; 
+import { asyncPipe, withSameConnection } from "./util.js"; 
 
 export function getNotes(req, res) {
-    // Promise.resolve()
-    //     .then(_ => authenticate(req))
-    //     .then(userId => Promise.all([
-    //         db.selectNotes(connect(), userId),
-    //         db.selectStyles(connect())
-    //     ]))
-    //     .then(([notes, styles]) => ({...model, notes, styles}))
-    //     .then(model => res.render('index', {model}))
-    //     .catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
-    //     .catch(err => renderError(err, res)); // else render generic error page
     asyncPipeWithMap(
-        (_, map) => map.set('model', {title: 'My To-do App'}),
+        (_, map) => map.set('title', 'My To-do App'), //example is simple enough to not need it, but it's there in case someone finds use case
         _ => authenticate(req),
         userId => Promise.all([
             db.selectNotes(connect(), userId),
             db.selectStyles(connect()),  
         ]),
-        ([notes, styles], map) => ({...map.get('model'), notes, styles}),
+        ([notes, styles], map) => ({...map.get('title'), notes, styles}),
         model => res.render('index', {model})
     ).catch(err => redirectOnNoAuth(err, res)) //catch error thrown by authenticate and redirect
      .catch(err => renderError(err, res)); // else render generic error page
@@ -28,45 +18,42 @@ export function getNotes(req, res) {
 
 export function addNote(req, res) {
     const {note, priority, style} = req.body;
-    Promise.resolve()
-        .then(_ => authenticate(req))
-        .then(userId => 
-            withSameConnection(
-                (connection)         => db.insertNote(connection, note, priority, userId),
-                (connection)         => db.lastInsertRow(connection),
-                (connection, noteId) => db.insertStyle(connection, noteId, style)
-            )
-        )
-        .then(_ => res.redirect('/'))
-        .catch(err => redirectOnNoAuth(err, res))
-        .catch(err => renderError(err, res));
+    asyncPipe(
+        _ => authenticate(req),
+        userId => withSameConnection(
+            (connection)         => db.insertNote(connection, note, priority, userId),
+            (connection)         => db.lastInsertRow(connection),
+            (connection, noteId) => db.insertStyle(connection, noteId, style)
+        ),
+        
+        _ => res.redirect('/')
+    ).catch(err => redirectOnNoAuth(err, res))
+     .catch(err => renderError(err, res));
 
 } 
 
 export function deleteNote(req, res) {
     const noteId = req.query.id;
-    const connection = connect();
-    Promise.resolve()
-        .then(_ => authenticate(req))
-        .then(userId => db.deleteNote(connection, noteId, userId))
-        .then(_ => res.redirect(303, '/'))
-        .catch(err => redirectOnNoAuth(err, res))
-        .catch(err => renderError(err, res));
+    asyncPipe(
+        _ => authenticate(req),
+        userId => db.deleteNote(connect(), noteId, userId),
+        _ => res.redirect(303, '/')
+    ).catch(err => redirectOnNoAuth(err, res))
+     .catch(err => renderError(err, res));
 }
 
 //REST api
 export function updateNote(req, res) {
-    const id = req.body.id;
-    const note = req.body.note;
-    Promise.resolve()
-           .then(_ => authenticate(req))
-           .then(userId => db.updateNote(connect(), id, note, userId))
-           .then(_ => res.status(200).send())
-           .catch(err => onNoAuthDo(err, _ => res.status(403).send()))
-           .catch(err => {
-                console.error(err);
-                res.status(400).send();
-            })
+    const [id, note] = req.body;
+    asyncPipe(
+        _ => authenticate(req),
+        userId => db.updateNote(connect(), id, note, userId),
+        _ => res.status(200).send()
+    ).catch(err => onNoAuthDo(err, _ => res.status(403).send()))
+     .catch(err => {
+        console.error(err);
+        res.status(400).send();
+     })
 }
 
 async function authenticate(req) {
